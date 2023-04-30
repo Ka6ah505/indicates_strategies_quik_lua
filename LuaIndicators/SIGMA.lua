@@ -32,6 +32,7 @@ Settings=
 	},
 	Horizontal_line="off"
 }
+
 function Init()
 	return #Settings.line
 end
