@@ -1,12 +1,6 @@
 --[=====[
-	TODO: описать что делает этот код
-	TODO: дать адекватное название индикатору
-	TODO: привести в порядок стайл кода
-	TODO: подготовить для работы на верии Lua 5.4.1
---]=====]
---[=====[
-	Считает силу измениения текущей свечи (разница между Close и Open) 
-		к последним N штук усредненным Close
+	Считает силу измениения текущей свечи (середина тела между Close и Open) 
+		к последним N штук усредненным телам (Open+Close)
 	Занчение индикатора выше ноля в тех случаях если текущая свеча зеленая и 
 		чем выше тем сильнее текущая свеча относительно среднего за N периодов
 	Значение индикатора ниже ноля в тех случаях если текущая свеча красная и 
@@ -14,14 +8,15 @@
 	Т.Е если показывается большое отклонение значит текущая свеча является импульсной,
 		направление зависит от положения значения относительно ноля
 --]=====]
+-- Настройки линии, как она будет выглядеть на графике
 Settings=
 {
-	Name = "(custom)Delta",
+	Name = "(custom)Body Impulse",
 	period = 10,
 	line =
 	{
 		{
-			Name = "dlt1",
+			Name = "body_impuls",
 			Color = RGB(255, 150, 0),
 			Type = TYPE_LINE,
 			Width = 2
@@ -34,17 +29,16 @@ function Init()
 end
 
 function OnCalculate(index)
-	if index < Settings.period then
+	if index-1 < Settings.period then
 		return nil
-	else 
-		sig = 0
+	else
 		xn = Settings.period
-		xsr=0
-		for i=index-xn+1, index do
-			xsr = xsr + C(i)
+		x_bodies=0
+		for i=index-xn, index-1 do
+			x_bodies = x_bodies + (C(i)+O(i))/2
 		end
-		xsr = xsr/xn
+		x_bodies = x_bodies/xn
 
-		return (C(index)+O(index))/2 - xsr
+		return (C(index)+O(index))/2 - x_bodies
 	end	
 end
