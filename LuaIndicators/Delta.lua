@@ -26,8 +26,7 @@ Settings=
 			Type = TYPE_LINE,
 			Width = 2
 		}
-	},
-	Horizontal_line="off"
+	}
 }
 
 function Init()
@@ -46,6 +45,6 @@ function OnCalculate(index)
 		end
 		xsr = xsr/xn
 
-		return math.abs(xsr-(C(index)+O(index))/2)
+		return (C(index)+O(index))/2 - xsr
 	end	
 end
