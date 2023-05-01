@@ -50,12 +50,13 @@ function OnCalculate(index)
 		end
 		xsr = xsr/(xn-1)
 		for i=index-xn+1, index-1 do
-			sig = sigT+math.pow(C(i)-xsr, 2)
+			sig = sigT + (C(i)-xsr)^2
 		end
 		--sigT = C(index-1)+3*math.pow(sig/(xn-1), 0.5)
 		--sigB = C(index-1)-3*math.pow(sig/(xn-1), 0.5)
-		sigT = xsr+Settings.signC*math.pow(sig/(xn), 0.5)
-		sigB = xsr-Settings.signC*math.pow(sig/(xn), 0.5)
+		pow = (sig/(xn))^0.5
+		sigT = xsr+Settings.signC*pow
+		sigB = xsr-Settings.signC*pow
 		return sigT, xsr, sigB
 	end	
 end
