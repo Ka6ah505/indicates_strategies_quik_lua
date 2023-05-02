@@ -3,6 +3,8 @@
 	TODO: дать адекватное название индикатору
 	TODO: привести в порядок стайл кода
 	TODO: подготовить для работы на верии Lua 5.4.1
+	TODO: Кажется формула не верная. Нужно сдедать как в примере 
+		https://ru.wikipedia.org/wiki/Среднеквадратическое_отклонение
 --]=====]
 Settings=
 {
@@ -46,7 +48,7 @@ function OnCalculate(index)
 		xn = Settings.period
 		xsr=0
 		for i=index-xn+1, index-1 do
-			xsr = xsr + C(i)
+			xsr = xsr + C(i) -- сумма N предыдущих закрытий
 		end
 		xsr = xsr/(xn-1)
 		for i=index-xn+1, index-1 do
