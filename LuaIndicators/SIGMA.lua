@@ -40,23 +40,22 @@ function Init()
 end
 
 function OnCalculate(index)
-	if index < Settings.period then
+	if index-1 < Settings.period then
 		return nil
 	else 
 		sig = 0
 		sigT = 0
 		xn = Settings.period
-		xsr=0
-		for i=index-xn+1, index-1 do
-			xsr = xsr + C(i) -- сумма N предыдущих закрытий
+		avg_close=0
+		for i=index-xn, index-1 do
+			avg_close = avg_close + C(i) -- сумма N предыдущих закрытий
 		end
-		xsr = xsr/(xn-1)
-		for i=index-xn+1, index-1 do
-			sig = sigT + (C(i)-xsr)^2
+		avg_close = avg_close/xn
+		for i=index-xn, index-1 do
+			sig = sig + (C(i)-avg_close)^2 -- сумма квадратов отклонений
 		end
-		--sigT = C(index-1)+3*math.pow(sig/(xn-1), 0.5)
-		--sigB = C(index-1)-3*math.pow(sig/(xn-1), 0.5)
-		pow = (sig/(xn))^0.5
+
+		pow = (sig/xn)^0.5
 		sigT = xsr+Settings.signC*pow
 		sigB = xsr-Settings.signC*pow
 		return sigT, xsr, sigB
