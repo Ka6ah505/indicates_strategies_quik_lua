@@ -1,7 +1,7 @@
 --[=====[
-	TODO: описать что делает этот код
-	TODO: дать адекватное название индикатору
+	Считает квадратное отклонение и строит канал между отклонениями
 --]=====]
+-- Настройки линий, как они будут выглядеть на графике
 Settings=
 {
 	Name = "(custom)Sigma",
@@ -38,22 +38,21 @@ end
 function OnCalculate(index)
 	if index-1 < Settings.period then
 		return nil
-	else 
-		sig = 0
-		sum_squared = 0
-		xn = Settings.period
-		avg_close=0
+	else
+		local sum_squared = 0
+		local xn = Settings.period
+		local sum_closes=0
 		for i=index-xn, index-1 do
-			avg_close = avg_close + C(i) -- сумма N предыдущих закрытий
+			sum_closes = sum_closes + C(i) -- сумма N предыдущих закрытий
 		end
-		avg_close = avg_close/xn
+		local avg_closes = sum_closes/xn
 		for i=index-xn+1, index-1 do
-			sum_squared = sum_squared + (C(i)-avg_close)^2 -- сумма квадратов отклонений
+			sum_squared = sum_squared + (C(i)-avg_closes)^2 -- сумма квадратов отклонений
 		end
 
-		sig = (sum_squared / xn) ^ 0.5
-		sigT = avg_close + Settings.signC * sig
-		sigB = avg_close - Settings.signC * sig
-		return sigT, avg_close, sigB
-	end	
+		local sig = (sum_squared / xn) ^ 0.5
+		local sigT = avg_closes + Settings.signC * sig
+		local sigB = avg_closes - Settings.signC * sig
+		return sigT, avg_closes, sigB
+	end
 end
